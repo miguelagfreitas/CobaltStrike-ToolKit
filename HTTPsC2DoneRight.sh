@@ -121,19 +121,11 @@ func_apache_check(){
   fi
 }
 
+#Fixing the deprecation issue, for letsencrypt-auto, replacing with certbot
+#Assuming certbot snap is installed
 func_install_letsencrypt(){
-  echo '[Starting] cloning into letsencrypt!'
-  git clone https://github.com/certbot/certbot /opt/letsencrypt
-  echo '[Success] letsencrypt is built!'
-  cd /opt/letsencrypt
   echo '[Starting] to build letsencrypt cert!'
-  ./letsencrypt-auto --apache -d $domain -n --register-unsafely-without-email --agree-tos 
-  if [ -e /etc/letsencrypt/live/$domain/fullchain.pem ]; then
-    echo '[Success] letsencrypt certs are built!'
-  else
-    echo "[ERROR] letsencrypt certs failed to build.  Check that DNS A record is properly configured for this domain"
-    exit 1
-  fi
+  certbot --apache -d $domain -n --register-unsafely-without-email --agree-tos
 }
 
 func_build_pkcs(){
